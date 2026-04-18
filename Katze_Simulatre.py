@@ -12,11 +12,21 @@ def loo_kass():
         "nalg": 50,
         "tuju": 100,
         "ussid": False,
+<<<<<<< HEAD
+        "usside_paevad": 0,
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
         "paevad_elus": 0, #score system
         "mangimise_counter": 0, #mangimise counter, mida rohkem mangimist seda parem sest kiisjud on PIRTSAKAD ja ei taha mangida
         "kaigud_ilma_manguta": 0,
         "kriimustused": 0,
+<<<<<<< HEAD
+        "hammustused": 0,
+        "saagid": [],
+        "oues_kaimise_counter": 0
+=======
         "hammustused": 0
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
     }
     return kass
 
@@ -48,6 +58,55 @@ def mangi_kassiga(kass):
 
 #defineeri funktsioon mis näitaks kassi seisu
 def kuva_seis(kass):
+<<<<<<< HEAD
+    print("\n" + "=" * 40)
+    print(f"🐱 {kass['nimi']} STATUS")
+    print("=" * 40)
+
+    # BASIC STATS
+    print(f"⚡ Energia : {kass['energia']}%",f"🍖 Nälg : {kass['nalg']}%")
+    print(f"🍖 Nälg    : {kass['nalg']}%")
+    print(f"😊 Tuju    : {kass['tuju']}%")
+    print(f"📅 Päevi   : {kass['paevad_elus']}")
+    print(f"🚑 Haiguse päevad: {kass['usside_paevad']}")
+
+    print("-" * 40)
+
+    # COUNTERS
+    print("📊 TEGEVUSED:")
+    print(f"🎮 Mängitud: {kass['mangimise_counter']}")
+    print(f"🏞️  Õues käigud: {kass['oues_kaimise_counter']}")
+    print(f"😼 Kriimustused: {kass['kriimustused']}")
+    print(f"😬 Hammustused: {kass['hammustused']}")
+
+    print("-" * 40)
+
+    # STATUS EFFECTS
+    if kass["ussid"]:
+        print("🐛 STATUS: USSID!")
+
+    if kass["kaigud_ilma_manguta"] >= 5:
+        print("😾 STATUS: VÄGA IGAV!")
+    elif kass["kaigud_ilma_manguta"] >= 2:
+        print("😿 STATUS: igav")
+    
+    print("🦴 SAAGID:")
+    saagide_kogus = {}
+
+    for s in kass["saagid"]:
+        if s in saagide_kogus:
+            saagide_kogus[s] += 1
+        else:
+            saagide_kogus[s] = 1
+
+    if saagide_kogus:
+        for loom, kogus in saagide_kogus.items():
+            print(f"{loom}-{kogus}")
+    else:
+        print(" (pole veel saaki)")
+
+    print("=" * 40 + "\n")
+=======
     print("--------")
     print("Nimi:", kass["nimi"])
     print(f"Energia: {kass['energia']}%")
@@ -73,6 +132,7 @@ def kuva_seis(kass):
         print("😿 Kass on VÄGA näljas!")
     elif kass["nalg"] >= 70:
         print("😾 Kass on näljane ja pahur!")
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
 def toida_kassi(kass):
     print("Annad kassile syya...")
@@ -107,6 +167,11 @@ def uuenda_seisund(kass):
     if kass["ussid"]:
         kass["tuju"] = max(0, kass["tuju"] - 5)
         kass["energia"] = max(0, kass["energia"] - 3)
+<<<<<<< HEAD
+        kass["usside_paevad"] += 1
+    else:
+        kass["usside_paevad"] = 0
+=======
     # #kui nalg max
     # if kass["nalg"] >= 100:
     #     print("😿 Kass on VÄGA näljas!")
@@ -121,6 +186,7 @@ def uuenda_seisund(kass):
 
     # if kass["paevad_elus"] == 10:
     #     print("😻 Kass usaldab sind täielikult!")
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
 def oues_kaimine(kass):
 
@@ -128,6 +194,13 @@ def oues_kaimine(kass):
 
     kass["energia"] = min(100, kass["energia"] + 20)
     kass["nalg"] = min(100, kass["nalg"] + 10)
+<<<<<<< HEAD
+    kass["oues_kaimise_counter"] += 1
+
+    r = random.random() # usside saamise random
+
+    if not kass["ussid"] and r < 0.15: #saad reguleerida usside saamise balance
+=======
 
     r = random.random() # usside saamise random
 
@@ -139,6 +212,7 @@ def oues_kaimine(kass):
     r = random.random()
 
     if not kass["ussid"] and r < 0.15:
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
         print("😱 Kass tuli õuest tagasi ja sai USSID!")
         kass["ussid"] = True
     else:
@@ -149,34 +223,66 @@ def oues_kaimine(kass):
         if r2 < 0.3:
             print("🐭 Kass püüdis hiire kinni!")
             kass["tuju"] = min(100, kass["tuju"] + 10)
+<<<<<<< HEAD
+            kass["saagid"].append("🐭 hiir")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
         elif r2 < 0.4:
             print("🦔 Kass püüdis siili kinni!")
             kass["tuju"] = min(100, kass["tuju"] + 30)
+<<<<<<< HEAD
+            kass["saagid"].append("🦔 siil")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
         elif r2 < 0.6:
             print("🐦 Kass püüdis linnu kinni!")
             kass["tuju"] = min(100, kass["tuju"] + 20)
+<<<<<<< HEAD
+            kass["saagid"].append("🐦 lind")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
         elif r2 < 0.8:
             print("🐸 Kass püüdis konna kinni!")
             kass["tuju"] = min(100, kass["tuju"] + 10)
+<<<<<<< HEAD
+            kass["saagid"].append("🐸 konn")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
         elif r2 < 0.9:
             print("🕷️ Kass püüdis ämbliku kinni!")
             kass["tuju"] = min(100, kass["tuju"] + 5)
+<<<<<<< HEAD
+            kass["saagid"].append("🕷️ ämblik")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
         elif r2 < 0.95:
             print("🦎 Kass püüdis sisaliku kinni!")
             kass["tuju"] = min(100, kass["tuju"] + 5)
+<<<<<<< HEAD
+            kass["saagid"].append("🦎 sisalik")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
         elif r2 < 0.99:
             print("🦂 Kass püüdis skorpioni kinni!")
             kass["tuju"] = min(100, kass["tuju"] + 5)
+<<<<<<< HEAD
+            kass["saagid"].append("🦂 skorpion")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
         else:
             print("🦄 Haruldane elukas! Kiisju leidis ükssarviku!")
             kass["tuju"] = min(100, kass["tuju"] + 100)
+<<<<<<< HEAD
+            kass["saagid"].append("🦄 ükssarvik")
+=======
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
             
 def ravi_ussid(kass):
     if not kass["ussid"]:
@@ -193,7 +299,18 @@ def ravi_ussid(kass):
     print("😺 Kass tunneb end palju paremini!")
 
 def kas_mang_labi(kass):
+<<<<<<< HEAD
+    if kass["tuju"] <= 0:
+        return True
+
+    if kass["usside_paevad"] >= 5:
+        print("☠️ Ussid võtsid kassi üle...")
+        return True
+
+    return False
+=======
     return kass["tuju"] <= 0
+>>>>>>> parent of 761d54b (Delete Katze_Simulatre.py)
 
 ####################################
 ####################################
