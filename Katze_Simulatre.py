@@ -176,81 +176,180 @@ def toida_kassi(kass):
     else:
         print("😋 Kass sõi!")
 
-def oues_kaimine(kass):
+# def oues_kaimine(kass):
 
-    print("Lased kassi oue...")
+#     print("Lased kassi oue...")
+
+#     kass["energia"] = min(100, kass["energia"] + 20)
+#     kass["nalg"] = min(100, kass["nalg"] + 10)
+#     kass["oues_kaimise_counter"] += 1
+#     # märjaks saamise chance
+#     if random.random() < 0.3:
+#         print("🌧️ Kass sai õues märjaks!")
+#         kass["marg_olemine"] = True
+
+#         # kuivamise chance
+#         if random.random() < 0.3:
+#             kass["marg_olemine"] = False
+#             print("☀️ Kass kuivas ära!")
+
+#     r = random.random() # usside saamise random
+
+#     if not kass["ussid"] and r < 0.0000000000000015: #saad reguleerida usside saamise balance
+#         print("😱 Kass tuli õuest tagasi ja sai USSID!")
+#         kass["ussid"] = True
+#     else:
+#         print("🌿 Kass tuli tagasi õuest!")
+
+#         # 👉 RASEDUS CHECK (SIIN!)
+#         if not kass["rasedus"]:
+#             r3 = random.random()
+#             if r3 < 0.10:  # 10% chance
+#                 kass["rasedus"] = True
+#                 kass["rasedus_paevad"] = 0
+#                 print("😳 Kass tuli tagasi... ja tundub, et ta on TIINE!")
+
+#         r2 = random.random() # looma pyydmise random
+
+#         if r2 < 0.3:
+#             print("🐭 Kass püüdis hiire kinni!")
+#             kass["tuju"] = min(100, kass["tuju"] + 10)
+#             kass["saagid"].append("🐭 hiir")
+
+#         elif r2 < 0.4:
+#             print("🦔 Kass püüdis siili kinni!")
+#             kass["tuju"] = min(100, kass["tuju"] + 30)
+#             kass["saagid"].append("🦔 siil")
+
+#         elif r2 < 0.6:
+#             print("🐦 Kass püüdis linnu kinni!")
+#             kass["tuju"] = min(100, kass["tuju"] + 20)
+#             kass["saagid"].append("🐦 lind")
+
+#         elif r2 < 0.8:
+#             print("🐸 Kass püüdis konna kinni!")
+#             kass["tuju"] = min(100, kass["tuju"] + 10)
+#             kass["saagid"].append("🐸 konn")
+
+#         elif r2 < 0.9:
+#             print("🕷️ Kass püüdis ämbliku kinni!")
+#             kass["tuju"] = min(100, kass["tuju"] + 5)
+#             kass["saagid"].append("🕷️ ämblik")
+
+#         elif r2 < 0.95:
+#             print("🦎 Kass püüdis sisaliku kinni!")
+#             kass["tuju"] = min(100, kass["tuju"] + 5)
+#             kass["saagid"].append("🦎 sisalik")
+
+#         elif r2 < 0.99:
+#             print("🦂 Kass püüdis skorpioni kinni!")
+#             kass["tuju"] = min(100, kass["tuju"] + 5)
+#             kass["saagid"].append("🦂 skorpion")
+
+#         else:
+#             print("🦄 Haruldane elukas! Kiisju leidis ükssarviku!")
+#             kass["tuju"] = min(100, kass["tuju"] + 100)
+#             kass["saagid"].append("🦄 ükssarvik")
+
+########################## OUES KAIMINE SIMPLIFIED ###########################################
+
+def oues_kaimine(kass):
+    print("Lased kassi õue...")
 
     kass["energia"] = min(100, kass["energia"] + 20)
     kass["nalg"] = min(100, kass["nalg"] + 10)
     kass["oues_kaimise_counter"] += 1
-    # märjaks saamise chance
+
+    print("🌿 Kass tuli tagasi õuest!")
+
+    # 👉 NEW: instead of all random logic
+    random_event(kass)
+
+########################## OUES KAIMINE SIMPLIFIED ###########################################
+
+########################## EVENTS ###########################################
+
+def event_vihm(kass):
     if random.random() < 0.3:
         print("🌧️ Kass sai õues märjaks!")
         kass["marg_olemine"] = True
 
-        # kuivamise chance
         if random.random() < 0.3:
             kass["marg_olemine"] = False
             print("☀️ Kass kuivas ära!")
 
-    r = random.random() # usside saamise random
-
-    if not kass["ussid"] and r < 0.0000000000000015: #saad reguleerida usside saamise balance
-        print("😱 Kass tuli õuest tagasi ja sai USSID!")
+def event_ussid(kass):
+    if not kass["ussid"] and random.random() < 0.01:
+        print("😱 Kass sai ussid!")
         kass["ussid"] = True
+
+def event_rasedus(kass):
+    if not kass["rasedus"] and random.random() < 0.10:
+        kass["rasedus"] = True
+        kass["rasedus_paevad"] = 0
+        print("😳 Kass tuli tagasi... ja tundub, et ta on TIINE!")
+
+def event_saak(kass):
+    r = random.random()
+
+    if r < 0.3:
+        print("🐭 Kass püüdis hiire!")
+        kass["tuju"] = min(100, kass["tuju"] + 10)
+        kass["saagid"].append("🐭 hiir")
+
+    elif r < 0.4:
+        print("🦔 Kass püüdis siili!")
+        kass["tuju"] = min(100, kass["tuju"] + 30)
+        kass["saagid"].append("🦔 siil")
+
+    elif r < 0.6:
+        print("🐦 Kass püüdis linnu!")
+        kass["tuju"] = min(100, kass["tuju"] + 20)
+        kass["saagid"].append("🐦 lind")
+
+    elif r < 0.8:
+        print("🐸 Kass püüdis konna!")
+        kass["tuju"] = min(100, kass["tuju"] + 10)
+        kass["saagid"].append("🐸 konn")
+
+    elif r < 0.9:
+        print("🕷️ Kass püüdis ämbliku!")
+        kass["tuju"] = min(100, kass["tuju"] + 5)
+        kass["saagid"].append("🕷️ ämblik")
+
+    elif r < 0.95:
+        print("🦎 Kass püüdis sisaliku!")
+        kass["tuju"] = min(100, kass["tuju"] + 5)
+        kass["saagid"].append("🦎 sisalik")
+
+    elif r < 0.99:
+        print("🦂 Kass püüdis skorpioni!")
+        kass["tuju"] = min(100, kass["tuju"] + 5)
+        kass["saagid"].append("🦂 skorpion")
+
     else:
-        print("🌿 Kass tuli tagasi õuest!")
+        print("🦄 HARULDANE ELUKAS! Kiisju leidis ükssarviku!")
+        kass["tuju"] = min(100, kass["tuju"] + 100)
+        kass["saagid"].append("🦄 ükssarvik")
 
-        # 👉 RASEDUS CHECK (SIIN!)
-        if not kass["rasedus"]:
-            r3 = random.random()
-            if r3 < 0.10:  # 10% chance
-                kass["rasedus"] = True
-                kass["rasedus_paevad"] = 0
-                print("😳 Kass tuli tagasi... ja tundub, et ta on TIINE!")
+########################## EVENTS ###########################################
 
-        r2 = random.random() # looma pyydmise random
+########################## EVENTS RUNNER ###########################################
 
-        if r2 < 0.3:
-            print("🐭 Kass püüdis hiire kinni!")
-            kass["tuju"] = min(100, kass["tuju"] + 10)
-            kass["saagid"].append("🐭 hiir")
+def random_event(kass):
+    events = [
+        event_vihm,
+        event_ussid,
+        event_rasedus,
+        event_saak
+    ]
 
-        elif r2 < 0.4:
-            print("🦔 Kass püüdis siili kinni!")
-            kass["tuju"] = min(100, kass["tuju"] + 30)
-            kass["saagid"].append("🦔 siil")
+    event = random.choice(events)
+    event(kass)
 
-        elif r2 < 0.6:
-            print("🐦 Kass püüdis linnu kinni!")
-            kass["tuju"] = min(100, kass["tuju"] + 20)
-            kass["saagid"].append("🐦 lind")
+########################## EVENTS RUNNER ###########################################
 
-        elif r2 < 0.8:
-            print("🐸 Kass püüdis konna kinni!")
-            kass["tuju"] = min(100, kass["tuju"] + 10)
-            kass["saagid"].append("🐸 konn")
 
-        elif r2 < 0.9:
-            print("🕷️ Kass püüdis ämbliku kinni!")
-            kass["tuju"] = min(100, kass["tuju"] + 5)
-            kass["saagid"].append("🕷️ ämblik")
-
-        elif r2 < 0.95:
-            print("🦎 Kass püüdis sisaliku kinni!")
-            kass["tuju"] = min(100, kass["tuju"] + 5)
-            kass["saagid"].append("🦎 sisalik")
-
-        elif r2 < 0.99:
-            print("🦂 Kass püüdis skorpioni kinni!")
-            kass["tuju"] = min(100, kass["tuju"] + 5)
-            kass["saagid"].append("🦂 skorpion")
-
-        else:
-            print("🦄 Haruldane elukas! Kiisju leidis ükssarviku!")
-            kass["tuju"] = min(100, kass["tuju"] + 100)
-            kass["saagid"].append("🦄 ükssarvik")
-                         
 def ravi_ussid(kass):
     if not kass["ussid"]:
         print("🤔 Kassil pole usse.")
