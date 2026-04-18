@@ -30,8 +30,9 @@ def loo_kass():
     return kass
 
 def mangi_kassiga(kass):
+    #see VIST restardib kaigud ilma manguta, (uuenda_seisund all lisab +1 juurde)
     kass["kaigud_ilma_manguta"] = 0
-    if kass["energia"] <= 15:
+    if kass["energia"] <= 15: #saad kassi ära väsimise taset reguleerida
         print("😴 Kass on liiga väsinud mängimiseks!")
         return
 
@@ -58,82 +59,58 @@ def mangi_kassiga(kass):
         print("😾 Kass on märg ja ei taha hästi mängida...")
         kass["tuju"] = max(0, kass["tuju"] - 5)
 
-
 #defineeri funktsioon mis näitaks kassi seisu
 def kuva_seis(kass):
-    print("\n" + "=" * 100)
-    print(f"🐱 {kass['nimi']} STATUS")
-    print("=" * 100)
+    print("\n" + "=" * 40)
+    print(f"🐱 {kass['nimi']}")
+    print("=" * 40)
 
-    # BASIC STATS
-    print(f"|⚡ Energia : {kass['energia']}% |",f"🍖 Nälg : {kass['nalg']}% |",f"😊 Tuju : {kass['tuju']}% |",f"📅 Päevi : {kass['paevad_elus']} |",f"🚑 Haiguse päevad : {kass['usside_paevad']} |")
-    # print(f"🍖 Nälg    : {kass['nalg']}%")
-    # print(f"😊 Tuju    : {kass['tuju']}%")
-    # print(f"📅 Päevi   : {kass['paevad_elus']}")
-    # print(f"🚑 Haiguse päevad : {kass['usside_paevad']}")
-
-    print("-" * 100)
+    # BASIC
+    print(f"⚡ {kass['energia']}%  🍖 KÕHUTÄIS {kass['nalg']}%  😊 {kass['tuju']}%")
+    print(f"📅 Päev: {kass['paevad_elus']}  🚑 Ussid: {kass['usside_paevad']}")
 
     # COUNTERS
-    print("📊 TEGEVUSED:")
-    print(f"|🎮 Mängitud: {kass['mangimise_counter']} |",f"🏞️  Õues käigud: {kass['oues_kaimise_counter']} |",f"😼 Kriimustused: {kass['kriimustused']} |",f"😬 Hammustused: {kass['hammustused']} |")
-    # print(f"🏞️  Õues käigud: {kass['oues_kaimise_counter']}")
-    # print(f"😼 Kriimustused: {kass['kriimustused']}")
-    # print(f"😬 Hammustused: {kass['hammustused']}")
+    print(f"🎮 MÄNGU {kass['mangimise_counter']} | 🏞️  ÕUE {kass['oues_kaimise_counter']} | 😼 KRIIMU {kass['kriimustused']} | 😬 AMPSTI {kass['hammustused']}")
 
-    print("-" * 100)
-    
-    #RASEDUS
-    if kass["rasedus"]:
-        print(f"🤰 RASEDUS: {kass['rasedus_paevad']} päeva")
-        print("-" * 100)
+    # STATUS LINE
+    statused = []
 
-    # STATUS EFFECTS
+    # need on kassi plokis = False
     if kass["ussid"]:
-        print("🐛 STATUS: USSID!")
-
-    if kass["kaigud_ilma_manguta"] >= 5:
-        print("😾 STATUS: VÄGA IGAV!")
-    elif kass["kaigud_ilma_manguta"] >= 2:
-        print("😿 STATUS: igav")
-
-    print("🦴 SAAGID:")
-    saagide_kogus = {}
-
-    for s in kass["saagid"]:
-        if s in saagide_kogus:
-            saagide_kogus[s] += 1
-        else:
-            saagide_kogus[s] = 1
-
-    if saagide_kogus:
-        for loom, kogus in saagide_kogus.items():
-            print(f"{loom}-{kogus}")
-    else:
-        print(" (pole veel saaki)")
-
+        statused.append("🐛 ussid")
     if kass["marg_olemine"]:
-        print("💧 STATUS: MÄRG")
-
+        statused.append("💧 märg")
     if kass["kylmetab"]:
-        print("❄️ STATUS: KÜLMETAB")
+        statused.append("❄️ külm")
+    # need ei ole kassi plokis võrdub False
+    if kass["kaigud_ilma_manguta"] >= 5:
+        statused.append("😾 igav")
+    elif kass["kaigud_ilma_manguta"] >= 2:
+        statused.append("😿 igav")
+    # kassi plokis = False
+    if kass["rasedus"]:
+        statused.append(f"🤰 {kass['rasedus_paevad']} päeva rase")
 
-    print("=" * 100 + "\n")
+    # MIDA SEE TEEB ??????????????????????????????????????
+    if statused:
+        print("STATUS:", ", ".join(statused))
 
-def toida_kassi(kass):
-    print("Annad kassile syya...")
-    kass["nalg"] = max(0, kass["nalg"] - 20)
+    # SAAGID ÜHEL REAL
+    if kass["saagid"]:
+        saagide_kogus = {}
+        for s in kass["saagid"]:
+            saagide_kogus[s] = saagide_kogus.get(s, 0) + 1
 
-    # kui kass EI OLE näljane → tuju langeb
-    if kass["nalg"] < 20:
-        print("😾 Kass ei tahtnud rohkem süüa...")
-        kass["tuju"] = max(0, kass["tuju"] - 5)
+        saak_str = " ".join([f"{loom}-{kogus}" for loom, kogus in saagide_kogus.items()])
+        print("🦴", saak_str)
     else:
-        print("😋 Kass sõi!")
+        print("🦴 -")
+
+    print("=" * 40)
 
 def uuenda_seisund(kass):
     #nalg kasvab
-    kass["nalg"] = min(100, kass["nalg"] + 5)
+    kass["nalg"] = max(0, kass["nalg"] - 5)
 
     #paevad loetakse
     kass["paevad_elus"] += 1
@@ -147,8 +124,13 @@ def uuenda_seisund(kass):
     elif kass["kaigud_ilma_manguta"] == 2:
         kass["tuju"] = max(0, kass["tuju"] - 2)
 
-    if kass["nalg"] >= 80:
-        kass["tuju"] = max(0, kass["tuju"] - 3)
+    if kass["nalg"] <= 20:
+        print("😿 Kass on VÄGA näljane!")
+        kass["tuju"] = max(0, kass["tuju"] - 5)
+    
+    elif kass["nalg"] <= 40:
+        print("😾 Kass on näljane...")
+        kass["tuju"] = max(0, kass["tuju"] - 2)
 
     if kass["ussid"]:
         kass["tuju"] = max(0, kass["tuju"] - 5)
@@ -159,12 +141,6 @@ def uuenda_seisund(kass):
     
     if kass["rasedus"]:
         kass["rasedus_paevad"] += 1
-
-    if kass["rasedus_paevad"] >= 100:
-        print("🐾 Kass sünnitas kassipojad!")
-        kass["rasedus"] = False
-        kass["rasedus_paevad"] = 0
-        kass["tuju"] = min(100, kass["tuju"] + 20)
     
     # MÄRG → KÜLMETAMINE
     if kass["marg_olemine"]:
@@ -189,6 +165,17 @@ def uuenda_seisund(kass):
             # kui kuivas → lõpetab külmetamise
             kass["kylmetab"] = False
 
+def toida_kassi(kass):
+    print("Annad kassile syya...")
+    kass["nalg"] = min(100, kass["nalg"] + 20)
+
+    # kui kass EI OLE näljane → tuju langeb
+    if kass["nalg"] < 20:
+        print("😾 Kass ei tahtnud rohkem süüa...")
+        kass["tuju"] = max(0, kass["tuju"] - 5)
+    else:
+        print("😋 Kass sõi!")
+
 def oues_kaimine(kass):
 
     print("Lased kassi oue...")
@@ -208,7 +195,7 @@ def oues_kaimine(kass):
 
     r = random.random() # usside saamise random
 
-    if not kass["ussid"] and r < 0.15: #saad reguleerida usside saamise balance
+    if not kass["ussid"] and r < 0.0000000000000015: #saad reguleerida usside saamise balance
         print("😱 Kass tuli õuest tagasi ja sai USSID!")
         kass["ussid"] = True
     else:
@@ -295,13 +282,15 @@ def kuivata_kass(kass):
 
 def kas_mang_labi(kass):
     if kass["tuju"] <= 0:
-        return True
+        return "kurbus"
 
     if kass["usside_paevad"] >= 5:
-        print("☠️ Ussid võtsid kassi üle...")
-        return True
+        return "ussid"
 
-    return False
+    if kass["rasedus"] and kass["rasedus_paevad"] >= 100:
+        return "pere"
+
+    return None
 
 ####################################
 ####################################
@@ -359,8 +348,19 @@ def mang():
         uuenda_seisund(kass)
 
         #game over check
-        if kas_mang_labi(kass):
-            print("💔 Kass on nii õnnetu, et lahkub sinu juurest...")
+        pohjus = kas_mang_labi(kass)
+
+        if pohjus:
+            if pohjus == "kurbus":
+                print("💔 Kass on nii õnnetu, et lahkub sinu juurest...")
+
+            elif pohjus == "ussid":
+                print("☠️ Ussid võtsid kassi üle...")
+
+            elif pohjus == "pere":
+                print("🐾 Kass sünnitas kassipojad!")
+                print("🏡 Ta lahkub koos oma perega...")
+
             print(f"Sa hoolitsesid tema eest {kass['paevad_elus']} päeva.")
             print("GAME OVER")
             break
