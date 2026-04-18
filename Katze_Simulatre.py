@@ -263,7 +263,7 @@ def oues_kaimine(kass):
     print("🌿 Kass tuli tagasi õuest!")
 
     # 👉 NEW: instead of all random logic
-    random_event(kass)
+    run_events(kass)
 
 ########################## OUES KAIMINE SIMPLIFIED ###########################################
 
@@ -289,63 +289,187 @@ def event_rasedus(kass):
         kass["rasedus_paevad"] = 0
         print("😳 Kass tuli tagasi... ja tundub, et ta on TIINE!")
 
-def event_saak(kass):
-    r = random.random()
+# def event_saak(kass):
+#     r = random.random()
 
-    if r < 0.3:
-        print("🐭 Kass püüdis hiire!")
-        kass["tuju"] = min(100, kass["tuju"] + 10)
-        kass["saagid"].append("🐭 hiir")
+#     if r < 0.3:
+#         print("🐭 Kass püüdis hiire!")
+#         kass["tuju"] = min(100, kass["tuju"] + 10)
+#         kass["saagid"].append("🐭 hiir")
 
-    elif r < 0.4:
-        print("🦔 Kass püüdis siili!")
-        kass["tuju"] = min(100, kass["tuju"] + 30)
-        kass["saagid"].append("🦔 siil")
+#     elif r < 0.4:
+#         print("🦔 Kass püüdis siili!")
+#         kass["tuju"] = min(100, kass["tuju"] + 30)
+#         kass["saagid"].append("🦔 siil")
 
-    elif r < 0.6:
-        print("🐦 Kass püüdis linnu!")
-        kass["tuju"] = min(100, kass["tuju"] + 20)
-        kass["saagid"].append("🐦 lind")
+#     elif r < 0.6:
+#         print("🐦 Kass püüdis linnu!")
+#         kass["tuju"] = min(100, kass["tuju"] + 20)
+#         kass["saagid"].append("🐦 lind")
 
-    elif r < 0.8:
-        print("🐸 Kass püüdis konna!")
-        kass["tuju"] = min(100, kass["tuju"] + 10)
-        kass["saagid"].append("🐸 konn")
+#     elif r < 0.8:
+#         print("🐸 Kass püüdis konna!")
+#         kass["tuju"] = min(100, kass["tuju"] + 10)
+#         kass["saagid"].append("🐸 konn")
 
-    elif r < 0.9:
-        print("🕷️ Kass püüdis ämbliku!")
-        kass["tuju"] = min(100, kass["tuju"] + 5)
-        kass["saagid"].append("🕷️ ämblik")
+#     elif r < 0.9:
+#         print("🕷️ Kass püüdis ämbliku!")
+#         kass["tuju"] = min(100, kass["tuju"] + 5)
+#         kass["saagid"].append("🕷️ ämblik")
 
-    elif r < 0.95:
-        print("🦎 Kass püüdis sisaliku!")
-        kass["tuju"] = min(100, kass["tuju"] + 5)
-        kass["saagid"].append("🦎 sisalik")
+#     elif r < 0.95:
+#         print("🦎 Kass püüdis sisaliku!")
+#         kass["tuju"] = min(100, kass["tuju"] + 5)
+#         kass["saagid"].append("🦎 sisalik")
 
-    elif r < 0.99:
-        print("🦂 Kass püüdis skorpioni!")
-        kass["tuju"] = min(100, kass["tuju"] + 5)
-        kass["saagid"].append("🦂 skorpion")
+#     elif r < 0.99:
+#         print("🦂 Kass püüdis skorpioni!")
+#         kass["tuju"] = min(100, kass["tuju"] + 5)
+#         kass["saagid"].append("🦂 skorpion")
 
-    else:
-        print("🦄 HARULDANE ELUKAS! Kiisju leidis ükssarviku!")
-        kass["tuju"] = min(100, kass["tuju"] + 100)
-        kass["saagid"].append("🦄 ükssarvik")
+#     else:
+#         print("🦄 HARULDANE ELUKAS! Kiisju leidis ükssarviku!")
+#         kass["tuju"] = min(100, kass["tuju"] + 100)
+#         kass["saagid"].append("🦄 ükssarvik")
 
 ########################## EVENTS ###########################################
 
+########################## DATA DRIVEN LOOTS ###########################################
+
+LOOT_TABLE = [
+    # CHANCE / NAME / TUJU PUNKTID
+    (0.3, "🐭 hiir", 10),
+    (0.1, "🦔 siil", 30),
+    (0.2, "🐦 lind", 20),
+    (0.2, "🐸 konn", 10),
+    (0.1, "🕷️ ämblik", 5),
+    (0.09, "🦎 sisalik", 5),
+    (0.009, "🦂 skorpion", 5),
+    (0.001, "🦄 ükssarvik", 100),
+]
+
+def roll_loot(kass):
+    r = random.random() # vahemik 0 - 1, random.random() tagastab ujukomaarvu (float) vahemikus 0.0 ≤ x < 1.0
+    kasvav_piirvaartus = 0 # see on vahemiku aluseks, et for cycle saaks vorrelda genereeritud ujukomaarvu loomade chance arvuga
+
+    for chance, name, tuju in LOOT_TABLE:
+        kasvav_piirvaartus += chance # random gen on ntx 0.5, chance lisab koigepealt 0.3 kasvavasse piirvaartusesse, 
+        # IF kontrollib kas 0.5 < 0.3, saab vastuseks false, rinse n repeat, 0.3+0.1 ka false, rinse n repeat, 0.6 on juba lind
+        if r < kasvav_piirvaartus:
+            print(f"Kiisju püüdis {name}!")
+            kass["saagid"].append(name)
+            kass["tuju"] = min(100, kass["tuju"] + tuju)
+            return
+
+def event_loot(kass):
+    roll_loot(kass)
+
+########################## DATA DRIVEN LOOTS ###########################################
+
+########################## DATA DRIVEN EVENTS ###########################################
+
+EVENTS = [
+    {
+        "name": "vihm",
+        "chance": 0.3,
+        "message": "🌧️ Kass sai märjaks!",
+        #condition missing
+        "effects": [
+            ("marg_olemine", True)
+        ]
+    },
+    {
+        "name": "kylm",
+        "chance": 0.3,
+        "condition": lambda k: k["marg_olemine"],
+        "message": "🥶 Kass hakkas külmetama!",
+        "effects": [("kylmetab", True)]
+    },
+    {
+        "name": "kuivamine",
+        "chance": 0.3,
+        "condition": lambda k: k["marg_olemine"],
+        "message": "☀️ Kass kuivas ära!",
+        "effects": [
+            ("marg_olemine", False),
+            ("kylmetab", False)
+        ]
+    },
+    {
+        "name": "ussid",
+        "chance": 0.0,# NERF USSID IF 0.0
+        "condition": lambda k: not k["ussid"],
+        "message": "😱 Kass sai ussid!",
+        "effects": [
+            ("ussid", True)
+        ]
+    },
+    {
+        "name": "rasedus",
+        "chance": 0.10,
+        "condition": lambda k: not k["rasedus"],
+        "message": "😳 Kass on nüüd TIINE!",
+        "effects": [
+            ("rasedus", True),
+            ("rasedus_paevad", 0)
+        ]
+    },
+]
+
+EVENTS.append({
+    "name": "loot",
+    "chance": 0.8, ### Lihtsama kontrollimise jaoks loot chance 1 ja saad loot_table loomade loot chancesid eraldi reguleerida
+    "action": event_loot
+})
+
+########################## DATA DRIVEN EVENTS ###########################################
+
+########################## GENERIC EVENT RUNNER ###########################################
+
+def run_events(kass):
+    for event in EVENTS:
+        
+        # chance check
+        if random.random() >= event["chance"]:
+            continue
+        
+        # optional condition # naiteks checkib kas kass on juba rase, et skippida event
+        #
+        # Check optional event condition (e.g. only runs if cat is pregnant / wet / etc.)
+        if "condition" in event and not event["condition"](kass):
+            continue
+        
+        # message
+        if "message" in event:
+            print(event["message"])
+
+        # apply effects
+        if "effects" in event:
+            for stat, value in event["effects"]:
+                if isinstance(value, bool):
+                    kass[stat] = value
+                else:
+                    kass[stat] += value
+        
+        # after effects
+        if "action" in event:
+            event["action"](kass)
+
+########################## GENERIC EVENT RUNNER ###########################################
+
+
 ########################## EVENTS RUNNER ###########################################
 
-def random_event(kass):
-    events = [
-        event_vihm,
-        event_ussid,
-        event_rasedus,
-        event_saak
-    ]
+# def random_event(kass):
+#     events = [
+#         event_vihm,
+#         event_ussid,
+#         event_rasedus,
+#         event_saak
+#     ]
 
-    event = random.choice(events)
-    event(kass)
+#     event = random.choice(events)
+#     event(kass)
 
 ########################## EVENTS RUNNER ###########################################
 
