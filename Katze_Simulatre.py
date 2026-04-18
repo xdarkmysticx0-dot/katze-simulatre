@@ -38,26 +38,31 @@ def mangi_kassiga(kass):
 
     print("Mangid kassiga...")
     # energia vaheneb
-    kass["energia"] = max(0, kass["energia"] - 15)
+    #kass["energia"] = max(0, kass["energia"] - 15)
+    add_stat(kass, "energia", -15)
     kass["mangimise_counter"] += 1
 
     #50% voimalus kriimusatada
     r = random.random()
     if r < 0.5:
         print("😾 Kiisju kriimustas sind!")
-        kass["tuju"] = max(0, kass["tuju"] - 20)
+        #kass["tuju"] = max(0, kass["tuju"] - 20)
+        add_stat(kass, "tuju", -20)
         kass["kriimustused"] += 1
     elif r < 0.8:
         print("😾 Kiisju hammustas sind!")
-        kass["tuju"] = max(0, kass["tuju"] - 10)
+        #kass["tuju"] = max(0, kass["tuju"] - 10)
+        add_stat(kass, "tuju", -10)
         kass["hammustused"] += 1
     else:
         print("😸 Kiisju mängis ilusti!")
-        kass["tuju"] = min(100, kass["tuju"] + 10)
+        #kass["tuju"] = min(100, kass["tuju"] + 10)
+        add_stat(kass, "tuju", 10)
     
     if kass["marg_olemine"]:
         print("😾 Kass on märg ja ei taha hästi mängida...")
-        kass["tuju"] = max(0, kass["tuju"] - 5)
+        #kass["tuju"] = max(0, kass["tuju"] - 5)
+        add_stat(kass, "tuju", -5)
 
 #defineeri funktsioon mis näitaks kassi seisu
 def kuva_seis(kass):
@@ -76,22 +81,27 @@ def kuva_seis(kass):
     statused = []
 
     # need on kassi plokis = False
+
     if kass["ussid"]:
         statused.append("🐛 ussid")
     if kass["marg_olemine"]:
         statused.append("💧 märg")
     if kass["kylmetab"]:
         statused.append("❄️ külm")
+
     # need ei ole kassi plokis võrdub False
+
     if kass["kaigud_ilma_manguta"] >= 5:
         statused.append("😾 igav")
     elif kass["kaigud_ilma_manguta"] >= 2:
         statused.append("😿 igav")
+
     # kassi plokis = False
+
     if kass["rasedus"]:
         statused.append(f"🤰 {kass['rasedus_paevad']} päeva rase")
 
-    # MIDA SEE TEEB ??????????????????????????????????????
+    # MIDA SEE TEEB ?????????????????????????????????????? aa see vist printib terminali status ainult siis kui statusesse miskit lisatakse
     if statused:
         print("STATUS:", ", ".join(statused))
 
@@ -110,7 +120,8 @@ def kuva_seis(kass):
 
 def uuenda_seisund(kass):
     #nalg kasvab
-    kass["nalg"] = max(0, kass["nalg"] - 5)
+    #kass["nalg"] = max(0, kass["nalg"] - 5)
+    add_stat(kass, "nalg", -5)
 
     #paevad loetakse
     kass["paevad_elus"] += 1
@@ -120,21 +131,27 @@ def uuenda_seisund(kass):
 
     # iga paari käigu järel muutub hullemaks
     if kass["kaigud_ilma_manguta"] == 5:
-        kass["tuju"] = max(0, kass["tuju"] - 5)
+        #kass["tuju"] = max(0, kass["tuju"] - 5)
+        add_stat(kass, "tuju", -5)
     elif kass["kaigud_ilma_manguta"] == 2:
-        kass["tuju"] = max(0, kass["tuju"] - 2)
+        #kass["tuju"] = max(0, kass["tuju"] - 2)
+        add_stat(kass, "tuju", -2)
 
     if kass["nalg"] <= 20:
         print("😿 Kass on VÄGA näljane!")
-        kass["tuju"] = max(0, kass["tuju"] - 5)
+        #kass["tuju"] = max(0, kass["tuju"] - 5)
+        add_stat(kass, "tuju", -5) # vaga naljast ka optimeerida
     
     elif kass["nalg"] <= 40:
         print("😾 Kass on näljane...")
-        kass["tuju"] = max(0, kass["tuju"] - 2)
+        #kass["tuju"] = max(0, kass["tuju"] - 2)
+        add_stat(kass, "tuju", -2) # miinus 2 ka kinda vahe
 
     if kass["ussid"]:
-        kass["tuju"] = max(0, kass["tuju"] - 5)
-        kass["energia"] = max(0, kass["energia"] - 3)
+        #kass["tuju"] = max(0, kass["tuju"] - 5)
+        add_stat(kass, "tuju", -5)
+        #kass["energia"] = max(0, kass["energia"] - 3)
+        add_stat(kass, "energia", -3) # usside saamisel voiks tuju ja energiataset intensiivsemalt mojutada, et ei laseks kassi oue kui tal norm pole olla, game balancing act
         kass["usside_paevad"] += 1
     else:
         kass["usside_paevad"] = 0
@@ -145,7 +162,8 @@ def uuenda_seisund(kass):
     # MÄRG → KÜLMETAMINE
     if kass["marg_olemine"]:
         # iga tick teeb halvemaks
-        kass["energia"] = max(0, kass["energia"] - 2)
+        #kass["energia"] = max(0, kass["energia"] - 2)
+        add_stat(kass, "energia", -2)
     
         # mingi hetk hakkab külmetama
         if random.random() < 0.3:
@@ -153,8 +171,10 @@ def uuenda_seisund(kass):
     
     if kass["kylmetab"]:
         print("🥶 Kass külmetab...")
-        kass["tuju"] = max(0, kass["tuju"] - 5)
-        kass["energia"] = max(0, kass["energia"] - 3)
+        #kass["tuju"] = max(0, kass["tuju"] - 5)
+        add_stat(kass, "tuju", -5)
+        #kass["energia"] = max(0, kass["energia"] - 3)
+        add_stat(kass, "energia", -3)
     
     # kuivamise süsteem
     if kass["marg_olemine"]:
@@ -167,97 +187,26 @@ def uuenda_seisund(kass):
 
 def toida_kassi(kass):
     print("Annad kassile syya...")
-    kass["nalg"] = min(100, kass["nalg"] + 20)
+    #kass["nalg"] = min(100, kass["nalg"] + 20)
+    add_stat(kass, "nalg", 20)
 
     # kui kass EI OLE näljane → tuju langeb
     if kass["nalg"] < 20:
         print("😾 Kass ei tahtnud rohkem süüa...")
-        kass["tuju"] = max(0, kass["tuju"] - 5)
+        #kass["tuju"] = max(0, kass["tuju"] - 5)
+        add_stat(kass, "tuju", -5)
     else:
         print("😋 Kass sõi!")
-
-# def oues_kaimine(kass):
-
-#     print("Lased kassi oue...")
-
-#     kass["energia"] = min(100, kass["energia"] + 20)
-#     kass["nalg"] = min(100, kass["nalg"] + 10)
-#     kass["oues_kaimise_counter"] += 1
-#     # märjaks saamise chance
-#     if random.random() < 0.3:
-#         print("🌧️ Kass sai õues märjaks!")
-#         kass["marg_olemine"] = True
-
-#         # kuivamise chance
-#         if random.random() < 0.3:
-#             kass["marg_olemine"] = False
-#             print("☀️ Kass kuivas ära!")
-
-#     r = random.random() # usside saamise random
-
-#     if not kass["ussid"] and r < 0.0000000000000015: #saad reguleerida usside saamise balance
-#         print("😱 Kass tuli õuest tagasi ja sai USSID!")
-#         kass["ussid"] = True
-#     else:
-#         print("🌿 Kass tuli tagasi õuest!")
-
-#         # 👉 RASEDUS CHECK (SIIN!)
-#         if not kass["rasedus"]:
-#             r3 = random.random()
-#             if r3 < 0.10:  # 10% chance
-#                 kass["rasedus"] = True
-#                 kass["rasedus_paevad"] = 0
-#                 print("😳 Kass tuli tagasi... ja tundub, et ta on TIINE!")
-
-#         r2 = random.random() # looma pyydmise random
-
-#         if r2 < 0.3:
-#             print("🐭 Kass püüdis hiire kinni!")
-#             kass["tuju"] = min(100, kass["tuju"] + 10)
-#             kass["saagid"].append("🐭 hiir")
-
-#         elif r2 < 0.4:
-#             print("🦔 Kass püüdis siili kinni!")
-#             kass["tuju"] = min(100, kass["tuju"] + 30)
-#             kass["saagid"].append("🦔 siil")
-
-#         elif r2 < 0.6:
-#             print("🐦 Kass püüdis linnu kinni!")
-#             kass["tuju"] = min(100, kass["tuju"] + 20)
-#             kass["saagid"].append("🐦 lind")
-
-#         elif r2 < 0.8:
-#             print("🐸 Kass püüdis konna kinni!")
-#             kass["tuju"] = min(100, kass["tuju"] + 10)
-#             kass["saagid"].append("🐸 konn")
-
-#         elif r2 < 0.9:
-#             print("🕷️ Kass püüdis ämbliku kinni!")
-#             kass["tuju"] = min(100, kass["tuju"] + 5)
-#             kass["saagid"].append("🕷️ ämblik")
-
-#         elif r2 < 0.95:
-#             print("🦎 Kass püüdis sisaliku kinni!")
-#             kass["tuju"] = min(100, kass["tuju"] + 5)
-#             kass["saagid"].append("🦎 sisalik")
-
-#         elif r2 < 0.99:
-#             print("🦂 Kass püüdis skorpioni kinni!")
-#             kass["tuju"] = min(100, kass["tuju"] + 5)
-#             kass["saagid"].append("🦂 skorpion")
-
-#         else:
-#             print("🦄 Haruldane elukas! Kiisju leidis ükssarviku!")
-#             kass["tuju"] = min(100, kass["tuju"] + 100)
-#             kass["saagid"].append("🦄 ükssarvik")
 
 ########################## OUES KAIMINE SIMPLIFIED ###########################################
 
 def oues_kaimine(kass):
     print("Lased kassi õue...")
 
-    kass["energia"] = min(100, kass["energia"] + 20)
-    kass["nalg"] = min(100, kass["nalg"] + 10)
+    #kass["energia"] = min(100, kass["energia"] + 20)
+    add_stat(kass, "energia", 20)
+    #kass["nalg"] = min(100, kass["nalg"] + 10)
+    add_stat(kass, "nalg", 10)
     kass["oues_kaimise_counter"] += 1
 
     print("🌿 Kass tuli tagasi õuest!")
@@ -289,49 +238,6 @@ def event_rasedus(kass):
         kass["rasedus_paevad"] = 0
         print("😳 Kass tuli tagasi... ja tundub, et ta on TIINE!")
 
-# def event_saak(kass):
-#     r = random.random()
-
-#     if r < 0.3:
-#         print("🐭 Kass püüdis hiire!")
-#         kass["tuju"] = min(100, kass["tuju"] + 10)
-#         kass["saagid"].append("🐭 hiir")
-
-#     elif r < 0.4:
-#         print("🦔 Kass püüdis siili!")
-#         kass["tuju"] = min(100, kass["tuju"] + 30)
-#         kass["saagid"].append("🦔 siil")
-
-#     elif r < 0.6:
-#         print("🐦 Kass püüdis linnu!")
-#         kass["tuju"] = min(100, kass["tuju"] + 20)
-#         kass["saagid"].append("🐦 lind")
-
-#     elif r < 0.8:
-#         print("🐸 Kass püüdis konna!")
-#         kass["tuju"] = min(100, kass["tuju"] + 10)
-#         kass["saagid"].append("🐸 konn")
-
-#     elif r < 0.9:
-#         print("🕷️ Kass püüdis ämbliku!")
-#         kass["tuju"] = min(100, kass["tuju"] + 5)
-#         kass["saagid"].append("🕷️ ämblik")
-
-#     elif r < 0.95:
-#         print("🦎 Kass püüdis sisaliku!")
-#         kass["tuju"] = min(100, kass["tuju"] + 5)
-#         kass["saagid"].append("🦎 sisalik")
-
-#     elif r < 0.99:
-#         print("🦂 Kass püüdis skorpioni!")
-#         kass["tuju"] = min(100, kass["tuju"] + 5)
-#         kass["saagid"].append("🦂 skorpion")
-
-#     else:
-#         print("🦄 HARULDANE ELUKAS! Kiisju leidis ükssarviku!")
-#         kass["tuju"] = min(100, kass["tuju"] + 100)
-#         kass["saagid"].append("🦄 ükssarvik")
-
 ########################## EVENTS ###########################################
 
 ########################## DATA DRIVEN LOOTS ###########################################
@@ -358,7 +264,8 @@ def roll_loot(kass):
         if r < kasvav_piirvaartus:
             print(f"Kiisju püüdis {name}!")
             kass["saagid"].append(name)
-            kass["tuju"] = min(100, kass["tuju"] + tuju)
+            #kass["tuju"] = min(100, kass["tuju"] + tuju)
+            add_stat(kass, "tuju", tuju)
             return
 
 def event_loot(kass):
@@ -457,23 +364,6 @@ def run_events(kass):
 
 ########################## GENERIC EVENT RUNNER ###########################################
 
-
-########################## EVENTS RUNNER ###########################################
-
-# def random_event(kass):
-#     events = [
-#         event_vihm,
-#         event_ussid,
-#         event_rasedus,
-#         event_saak
-#     ]
-
-#     event = random.choice(events)
-#     event(kass)
-
-########################## EVENTS RUNNER ###########################################
-
-
 def ravi_ussid(kass):
     if not kass["ussid"]:
         print("🤔 Kassil pole usse.")
@@ -481,16 +371,17 @@ def ravi_ussid(kass):
 
     print("💊 Annad kassile ussirohtu...")
     kass["ussid"] = False
-
-    # väike reward, et mängija tunneks kasu
-    kass["tuju"] = min(100, kass["tuju"] + 10)
-    kass["energia"] = min(100, kass["energia"] + 5)
+    #kass["tuju"] = min(100, kass["tuju"] + 10)
+    add_stat(kass, "tuju", 10)
+    #kass["energia"] = min(100, kass["energia"] + 5)
+    add_stat(kass, "energia", 5)
 
     print("😺 Kass tunneb end palju paremini!")
 
 def palderjan(kass):
     kass["palderjanis_olek"] = True
-    kass["tuju"] = min(100, kass["tuju"] + 75)
+    #kass["tuju"] = min(100, kass["tuju"] + 75)
+    add_stat(kass, "tuju", 75)
     print("💉 Kiisju on aines")
 
 def kuivata_kass(kass):
@@ -501,7 +392,8 @@ def kuivata_kass(kass):
     print("🧻 Kuivatad kassi...")
     kass["marg_olemine"] = False
     kass["kylmetab"] = False
-    kass["tuju"] = min(100, kass["tuju"] + 5)
+    #kass["tuju"] = min(100, kass["tuju"] + 5)
+    add_stat(kass, "tuju", 5)
 
 def kas_mang_labi(kass):
     if kass["tuju"] <= 0:
@@ -536,6 +428,11 @@ def kysi_tegevus():
             return valik
         else:
             print("❌ Vali olemasolev number!")
+
+# ADD STAT HELPER
+def add_stat(kass, stat, value, min_v=0, max_v=100):
+    kass[stat] = max(min_v, min(max_v, kass[stat] + value))
+# ADD STAT HELPER
 
 #mangu loop
 def mang():
